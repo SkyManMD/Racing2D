@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_racinggame" default="compile.module.racinggame">
+  <dirname property="module.racinggame.basedir" file="${ant.file.module_racinggame}"/>
+  
+  <property name="module.jdk.home.racinggame" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.racinggame" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.racinggame" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.racinggame" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
+  
+  <property name="racinggame.output.dir" value="${module.racinggame.basedir}/out/production/RacingGame"/>
+  <property name="racinggame.testoutput.dir" value="${module.racinggame.basedir}/out/test/RacingGame"/>
+  
+  <path id="racinggame.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="racinggame.module.production.classpath">
+    <path refid="${module.jdk.classpath.racinggame}"/>
+    <path refid="library.jl1.0.1.classpath"/>
+  </path>
+  
+  <path id="racinggame.runtime.production.module.classpath">
+    <pathelement location="${racinggame.output.dir}"/>
+    <path refid="library.jl1.0.1.classpath"/>
+  </path>
+  
+  <path id="racinggame.module.classpath">
+    <path refid="${module.jdk.classpath.racinggame}"/>
+    <pathelement location="${racinggame.output.dir}"/>
+    <path refid="library.jl1.0.1.classpath"/>
+  </path>
+  
+  <path id="racinggame.runtime.module.classpath">
+    <pathelement location="${racinggame.testoutput.dir}"/>
+    <pathelement location="${racinggame.output.dir}"/>
+    <path refid="library.jl1.0.1.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.racinggame">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.racinggame">
+    <patternset refid="excluded.from.module.racinggame"/>
+  </patternset>
+  
+  <path id="racinggame.module.sourcepath">
+    <dirset dir="${module.racinggame.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.racinggame" depends="compile.module.racinggame.production,compile.module.racinggame.tests" description="Compile module RacingGame"/>
+  
+  <target name="compile.module.racinggame.production" depends="register.custom.compilers" description="Compile module RacingGame; production classes">
+    <mkdir dir="${racinggame.output.dir}"/>
+    <javac2 destdir="${racinggame.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.racinggame}/javac">
+      <compilerarg line="${compiler.args.racinggame}"/>
+      <bootclasspath refid="racinggame.module.bootclasspath"/>
+      <classpath refid="racinggame.module.production.classpath"/>
+      <src refid="racinggame.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.racinggame"/>
+    </javac2>
+    
+    <copy todir="${racinggame.output.dir}">
+      <fileset dir="${module.racinggame.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.racinggame.tests" depends="register.custom.compilers,compile.module.racinggame.production" description="compile module RacingGame; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.racinggame" description="cleanup module">
+    <delete dir="${racinggame.output.dir}"/>
+    <delete dir="${racinggame.testoutput.dir}"/>
+  </target>
+</project>
